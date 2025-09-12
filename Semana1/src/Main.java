@@ -11,6 +11,7 @@ public class Main {
         double total = 0;
         while (true) {
             System.out.println("Options:");
+            break;
         }
     }
 
