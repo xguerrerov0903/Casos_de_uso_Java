@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     // Declare global variables
     static ArrayList<String> name_products = new ArrayList<>();
