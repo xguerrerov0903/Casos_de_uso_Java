@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Casos de uso Java.iml" filepath="$PROJECT_DIR$/Casos de uso Java.iml" />
       <module fileurl="file://$PROJECT_DIR$/Semana1/Semana1.iml" filepath="$PROJECT_DIR$/Semana1/Semana1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Semana2/Semana2.iml" filepath="$PROJECT_DIR$/Semana2/Semana2.iml" />
     </modules>
   </component>
 </project>
