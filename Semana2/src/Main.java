@@ -1,15 +1,32 @@
+import Model.Invent;
+import Service.ProductoSer;
+import Utils.Inputs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import javax.swing.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import Model.Producto;
+
+/*
+Agregar get descripcion a la impresion de productos
+Agregar validaciones en los inputs en su propia clase
+Tener una validacion de producto ya existente reutilizable (puede ser el mismo buscar producto)
+Imprimir tickey parcial, ver como organizar eso
+Tambien el ticket al final
+Darle al menu su propia clase
+*/
+
+
 public class Main {
-    // Declare global variables
+
     static ArrayList<String> name_products = new ArrayList<>();
     static double[] prices = new double[0];
     static HashMap<String, Integer> stocks = new HashMap<>();
     static double total = 0;
+    static Invent invet = new Invent();
+    static ArrayList<Producto> products = new ArrayList<>();
 
     public static void main(String[] args) {
         // main menu loop
@@ -52,79 +69,37 @@ public class Main {
 
     // function to add a product
     public static void add_product() {
-        String name;
+        String name = "";
         do {
-            String input_name = javax.swing.JOptionPane.showInputDialog("Product name: ");
-            // check if the user pressed cancel and return to the main menu
-            if (input_name == null) {
-                return;
-                // check if the input is empty and show a warning message
-            } else if (input_name.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Empty name",
-                        "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
-                continue;
-            }
-            name = input_name.toLowerCase().trim();
-            // check if the product already exist and show a warning message
-            if (name_products.contains(name)) {
+            name = Inputs.requestString("Product name: ");
+            if (invet.getName_products().contains(name)) {
                 JOptionPane.showMessageDialog(null, "Already exist product",
                         "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
                 continue;
             }
-            // add the product name to the list
-            name_products.add(name);
             break;
         } while (true);
-        do {
-            try {
-                String input_price = JOptionPane.showInputDialog("Producto price");
-                // check if the user pressed cancel and return to the main menu
-                if (input_price == null) {
-                    return;
-                }
-                double price = Double.parseDouble(input_price);
-                // check if the price is less than or equal to 0 and throw an exception
-                if (price <= 0) {
-                    throw new IllegalArgumentException("");
-                }
-                // create a new array with the new price and copy the old prices
-                double[] prices_copy = new double[prices.length + 1];
-                for (int i = 0; i < prices.length; i++) {
-                    prices_copy[i] = prices[i];
-                }
-                prices_copy[prices_copy.length - 1] = price;
-                // assign the new array to the old array
-                prices = prices_copy;
-                break;
-            } catch (Exception e) {
-                // show an error message if the input is not a valid number
-                JOptionPane.showMessageDialog(null, "Invalid price",
-                        "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-            }
-        } while (true);
-        do {
-            try {
-                String input_stock = JOptionPane.showInputDialog("Product stock");
-                // check if the user pressed cancel and return to the main menu
-                if (input_stock == null) {
-                    return;
-                }
-                int stock = Integer.parseInt(input_stock);
-                // check if the stock is less than or equal to 0 and throw an exception
-                if (stock <= 0) {
-                    throw new IllegalArgumentException("");
-                }
-                // add the stock to the hashmap with the product name as key
-                stocks.put(name, stock);
-                break;
-            } catch (Exception e) {
-                // show an error message if the input is not a valid number
-                JOptionPane.showMessageDialog(null, "Invalid stock",
-                        "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
-            }
-        } while (true);
-        // show a message that the product was added
-        JOptionPane.showMessageDialog(null, "Product add");
+        Optional<Double> price_d = Inputs.requestDouble("Product price: ");
+        double price = price_d.get();
+        int stock = Inputs.requestInteger("Product stock: ");
+        String[] options = {"Any", "Food", "Electronics"};
+        int cat = JOptionPane.showOptionDialog(
+                null,
+                "What type of product is it?",
+                "",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+        String message = "Product name: " + name + "\n" +
+                "Product price: " + price + "\n" +
+                "Product stock: " + stock + "\n" +
+                "Product category: " + options[cat] + "\n" +
+                "Are you sure you want to add this product?";
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Would You Like to Save your Previous Note First?", "Warning", dialogButton);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            products.add(ProductoSer.addProduct(invet, name, price, stock, cat));
+            JOptionPane.showMessageDialog(null, "Product add");
+        }
         return;
     }
 
@@ -204,6 +179,7 @@ public class Main {
         return;
 
     }
+
     // function to show the stats of the products sorted by price min to max
     public static void stats_products() {
         // check if there are products in the list
@@ -230,6 +206,7 @@ public class Main {
         JOptionPane.showMessageDialog(null, output_print);
         return;
     }
+
     // function to search for a product by name
     public static void search_product() {
         // check if there are products in the list if not show a warning message and return to the main menu

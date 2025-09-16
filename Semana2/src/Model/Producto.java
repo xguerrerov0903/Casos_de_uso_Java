@@ -1,3 +1,5 @@
+package Model;
+
 import javax.swing.*;
 
 public class Producto {
@@ -33,7 +35,7 @@ public class Producto {
 
     @Override
     public String toString() {
-        return "Producto{" +
+        return "Model.Producto{" +
                 "name='" + name + '\'' +
                 ", price=" + price +
                 '}';
@@ -44,27 +46,7 @@ public class Producto {
     }
 }
 
-class Food extends Producto{
-    public Food(String name, double price) {
-        super(name, price);
-    }
 
-    @Override
-    public void getDescription() {
-        JOptionPane.showMessageDialog(null,"This is a food product named " + getName() + " with a price of " + getPrice());
-    }
-}
-
-class Electrical extends Producto{
-    public Electrical(String name, double price) {
-        super(name, price);
-    }
-
-    @Override
-    public void getDescription() {
-        JOptionPane.showMessageDialog(null,"This is a electrical product named " + getName() + " with a price of " + getPrice());
-    }
-}
 
 
 
