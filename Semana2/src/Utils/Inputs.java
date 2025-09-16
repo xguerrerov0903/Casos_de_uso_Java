@@ -22,9 +22,8 @@ public class Inputs {
             String trimmedInput = inputString == null ? "" : inputString.trim();
             if (allowEmpty)
                 return trimmedInput;
-
             if (!trimmedInput.isEmpty())
-                return trimmedInput;
+                return trimmedInput.toLowerCase().trim();
 
             JOptionPane.showMessageDialog(null, invalidInputMessage, DEFAULT_INVALID_INPUT_PANE_TITLE,
                     JOptionPane.WARNING_MESSAGE);

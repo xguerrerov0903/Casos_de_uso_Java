@@ -41,8 +41,8 @@ public class Producto {
                 '}';
     }
 
-    public void getDescription() {
-        JOptionPane.showMessageDialog(null,"This is a product named " + name + " with a price of " + price );
+    public String getDescription() {
+        return "This is a product named " + name + " with a price of " + price ;
     }
 }
 

@@ -10,9 +10,6 @@ import javax.swing.*;
 import Model.Producto;
 
 /*
-Agregar get descripcion a la impresion de productos
-Agregar validaciones en los inputs en su propia clase
-Tener una validacion de producto ya existente reutilizable (puede ser el mismo buscar producto)
 Imprimir tickey parcial, ver como organizar eso
 Tambien el ticket al final
 Darle al menu su propia clase
@@ -106,54 +103,43 @@ public class Main {
     // function to print the products
     public static void print_product() {
         // check if there are products in the list
-        if (name_products.isEmpty()) {
+        if (invet.getName_products().isEmpty()) {
             // show a warning message if the list is empty and return to the main menu
             JOptionPane.showMessageDialog(null, "Empty stock",
                     "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        String out_print = "";
-        // loop through the products and print their name, price and stock
-        for (int i = 0; i < name_products.size(); i++) {
-            out_print += name_products.get(i) + " price: " + prices[i] + " stock: " + stocks.get(name_products.get(i)) + "\n";
-        }
-        // show the products in a message dialog and return to the main menu
+        String out_print = ProductoSer.getProducts(invet, products);
         JOptionPane.showMessageDialog(null, out_print);
         return;
-
     }
 
     // function to buy a product
     public static void buy_product() {
         // check if there are products in the list
-        if (name_products.isEmpty()) {
+        if (invet.getName_products().isEmpty()) {
             // show a warning message if the list is empty and return to the main menu
             JOptionPane.showMessageDialog(null, "Empty stock",
                     "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
             return;
         }
         // ask the user for the product name
-        String input_name = javax.swing.JOptionPane.showInputDialog("Product name: ");
-        // check if the user pressed cancel and return to the main menu
-        if (input_name == null) {
-            return;
-        }
-        // convert the input to lowercase and trim spaces
-        String name = input_name.toLowerCase().trim();
+        String name = Inputs.requestString("Product name: ");
+
         String output_print = "";
         // check if the product exists in the list
-        if (name_products.contains(name)) {
+        if (invet.getName_products().contains(name)) {
             int stock = 0;
             // get the index of the product in the list to access its price and stock
-            int i = name_products.indexOf(name);
+            int i = invet.getName_products().indexOf(name);
             // print the product details
-            output_print += name_products.get(i) + " price: " + prices[i] + " stock: " + stocks.get(name_products.get(i));
+            output_print += invet.getName_products().get(i) + " price: " + invet.getPrices()[i] + " stock: " + invet.getStocks().get(invet.getName_products().get(i));
             JOptionPane.showMessageDialog(null, output_print);
             try {
                 // ask the user for the amount to buy
-                stock = Integer.parseInt(javax.swing.JOptionPane.showInputDialog("How many?"));
+                stock = Inputs.requestInteger("Amount to buy: ");
                 // check if the amount is valid and if there is enough stock
-                if (stock <= 0 || stock > stocks.get(name_products.get(i))) {
+                if (stock <= 0 || stock > invet.getStocks().get(invet.getName_products().get(i))) {
                     // if not, throw an exception
                     throw new IllegalArgumentException("");
                 }
@@ -164,13 +150,12 @@ public class Main {
                 return;
             }
             // update the stock in the hashmap and calculate the total and change the global total
-            int stock_amount = stocks.get(name);
-            stocks.put(name, stock_amount - stock);
+            int stock_amount = invet.getStocks().get(name);
+            invet.getStocks().put(name, stock_amount - stock);
             double sub_total = prices[i] * stock;
             total += sub_total;
             // show a message that the product was purchased with the total
             JOptionPane.showMessageDialog(null, "Purchased product: " + name + " amount: " + stock + " total: " + sub_total);
-
         } else {
             // show an error message if the product does not exist
             JOptionPane.showMessageDialog(null, "Product not found",

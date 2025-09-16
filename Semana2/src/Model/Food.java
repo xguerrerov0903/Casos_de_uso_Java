@@ -8,7 +8,7 @@ public class Food extends Producto{
     }
 
     @Override
-    public void getDescription() {
-        JOptionPane.showMessageDialog(null,"This is a food product named " + getName() + " with a price of " + getPrice());
+    public String getDescription() {
+        return "This is a food product named " + getName() + " with a price of " + getPrice();
     }
 }

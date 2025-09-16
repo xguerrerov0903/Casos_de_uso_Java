@@ -5,6 +5,8 @@ import Model.Producto;
 import Model.Food;
 import Model.Electrical;
 
+import java.util.ArrayList;
+
 
 public class ProductoSer
 {
@@ -32,7 +34,18 @@ public class ProductoSer
         return producto;
     }
 
-
-
+    public static String getProducts(Invent invet, ArrayList<Producto> products)
+    {
+        StringBuilder out_products = new StringBuilder();
+        for (Producto product: products ) {
+            String name = product.getName();
+            out_products.append("Name: ").append(name)
+                    .append(", Price: ").append(invet.getPrices()[invet.getName_products().indexOf(name)])
+                    .append(", Stock: ").append(invet.getStocks().get(name))
+                    .append("\n")
+                    .append(product.getDescription()).append("\n");
+        }
+        return out_products.toString();
+    }
 
 }
