@@ -13,16 +13,17 @@ public class ProductoSer
 
     public static Producto addProduct(Invent invet, String name, double price, int stock, int cat)
     {
+        Producto producto;
         if ( cat == 0){
-            Producto producto = new Producto(name, price);
+            System.out.println("food");
+            producto = new Food(name, price);
+
         } else if ( cat == 1){
-            Food producto = new Food(name, price);
-
-        } else if ( cat == 2){
-            Electrical producto = new Electrical(name, price);
-
+            System.out.println("ELE");
+            producto = new Electrical(name, price);
+        } else {
+            throw new IllegalArgumentException("Invalid category selected");
         }
-        Producto producto = new Producto(name, price);
         invet.getName_products().add(name);
         double[] upd_prices = new double[invet.getPrices().length + 1];
         for (int i = 0; i < invet.getPrices().length; i++) {

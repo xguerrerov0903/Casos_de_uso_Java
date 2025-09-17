@@ -9,19 +9,15 @@ import javax.swing.*;
 
 import Model.Producto;
 
+
+
 /*
-Imprimir tickey parcial, ver como organizar eso
 Tambien el ticket al final
-Darle al menu su propia clase
 */
 
 
 public class Main {
 
-    static ArrayList<String> name_products = new ArrayList<>();
-    static double[] prices = new double[0];
-    static HashMap<String, Integer> stocks = new HashMap<>();
-    static double total = 0;
     static Invent invet = new Invent();
     static ArrayList<Producto> products = new ArrayList<>();
 
@@ -54,11 +50,11 @@ public class Main {
                     break;
                 case 5:
                     // exit the program and show the total
-                    JOptionPane.showMessageDialog(null, "Your total is: " + total);
+                    JOptionPane.showMessageDialog(null, "Your total is: " + invet.getTotal());
                     return;
                 default:
                     // in case the user close the program it shows the total anyway
-                    JOptionPane.showMessageDialog(null, "Your total is: " + total);
+                    JOptionPane.showMessageDialog(null, "Your total is: " + invet.getTotal());
                     return;
             }
         }
@@ -69,35 +65,47 @@ public class Main {
         String name = "";
         do {
             name = Inputs.requestString("Product name: ");
+            System.out.println(name);
             if (invet.getName_products().contains(name)) {
                 JOptionPane.showMessageDialog(null, "Already exist product",
                         "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
                 continue;
             }
+            if (name == null){
+                return;
+            }
             break;
         } while (true);
         Optional<Double> price_d = Inputs.requestDouble("Product price: ");
+        if (price_d.isEmpty()){
+            return;
+        }
         double price = price_d.get();
-        int stock = Inputs.requestInteger("Product stock: ");
-        String[] options = {"Any", "Food", "Electronics"};
-        int cat = JOptionPane.showOptionDialog(
+        Integer stock = Inputs.requestInteger("Product stock: ");
+        if (stock == null){
+            return;
+        }
+        String[] options = {"Food", "Electronics"};
+        Integer cat = JOptionPane.showOptionDialog(
                 null,
                 "What type of product is it?",
                 "",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-
+        if (cat==-1){
+            return;
+        }
         String message = "Product name: " + name + "\n" +
                 "Product price: " + price + "\n" +
                 "Product stock: " + stock + "\n" +
                 "Product category: " + options[cat] + "\n" +
                 "Are you sure you want to add this product?";
         int dialogButton = JOptionPane.YES_NO_OPTION;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Would You Like to Save your Previous Note First?", "Warning", dialogButton);
+        int dialogResult = JOptionPane.showConfirmDialog(null, message, "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
             products.add(ProductoSer.addProduct(invet, name, price, stock, cat));
             JOptionPane.showMessageDialog(null, "Product add");
         }
-        return;
+
     }
 
     // function to print the products
@@ -111,7 +119,7 @@ public class Main {
         }
         String out_print = ProductoSer.getProducts(invet, products);
         JOptionPane.showMessageDialog(null, out_print);
-        return;
+
     }
 
     // function to buy a product
@@ -125,11 +133,13 @@ public class Main {
         }
         // ask the user for the product name
         String name = Inputs.requestString("Product name: ");
-
+        if (name == null){
+            return;
+        }
         String output_print = "";
         // check if the product exists in the list
         if (invet.getName_products().contains(name)) {
-            int stock = 0;
+            Integer stock = 0;
             // get the index of the product in the list to access its price and stock
             int i = invet.getName_products().indexOf(name);
             // print the product details
@@ -152,23 +162,28 @@ public class Main {
             // update the stock in the hashmap and calculate the total and change the global total
             int stock_amount = invet.getStocks().get(name);
             invet.getStocks().put(name, stock_amount - stock);
-            double sub_total = prices[i] * stock;
-            total += sub_total;
+            double sub_total = invet.getPrices()[i] * stock;
+            invet.addTotal(sub_total);
             // show a message that the product was purchased with the total
             JOptionPane.showMessageDialog(null, "Purchased product: " + name + " amount: " + stock + " total: " + sub_total);
+            String ticket = "Name: " + name +
+                    " Price: " + sub_total +
+                    " Stock: " + stock + "\n" +
+                    "Description: " + products.get(i).getDescription() +
+                    "------------------------\n";
+
         } else {
             // show an error message if the product does not exist
             JOptionPane.showMessageDialog(null, "Product not found",
                     "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
         }
-        return;
 
     }
 
     // function to show the stats of the products sorted by price min to max
     public static void stats_products() {
         // check if there are products in the list
-        if (name_products.isEmpty()) {
+        if (invet.getName_products().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Empty stock",
                     "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
             return;
@@ -178,14 +193,14 @@ public class Main {
         String output_print = "";
 
         // fill the arraylist with the indexes of the products
-        for (int i = 0; i < prices.length; i++) {
+        for (int i = 0; i < invet.getPrices().length; i++) {
             index_p.add(i);
         }
         // sort the arraylist by the prices of the products using a lambda function
-        index_p.sort((i1, i2) -> Double.compare(prices[i1], prices[i2]));
+        index_p.sort((i1, i2) -> Double.compare(invet.getPrices()[i1], invet.getPrices()[i2]));
         // loop through the sorted arraylist and print the product details
         for (int num : index_p) {
-            output_print += name_products.get(num) + " price: " + prices[num] + "\n";
+            output_print += invet.getName_products().get(num) + " price: " + invet.getPrices()[num] + "\n";
         }
         // show the sorted products in a message dialog and return to the main menu
         JOptionPane.showMessageDialog(null, output_print);
@@ -195,19 +210,23 @@ public class Main {
     // function to search for a product by name
     public static void search_product() {
         // check if there are products in the list if not show a warning message and return to the main menu
-        if (name_products.isEmpty()) {
+        if (invet.getName_products().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Empty stock",
                     "WARNING_MESSAGE", JOptionPane.WARNING_MESSAGE);
             return;
         }
         // ask the user for the product name
-        String name = javax.swing.JOptionPane.showInputDialog("Product name: ").toLowerCase().trim();
+        String name = Inputs.requestString("Product name: ");
+        if (name == null) {
+            return;
+        }
+
         String output_print = "";
         // check if the product exists in the list
-        if (name_products.contains(name)) {
+        if (invet.getName_products().contains(name)) {
             // get the index of the product in the list to access its price and stock
-            int i = name_products.indexOf(name);
-            output_print += name_products.get(i) + " price: " + prices[i] + " stock: " + stocks.get(name_products.get(i));
+            int i = invet.getName_products().indexOf(name);
+            output_print += invet.getName_products().get(i) + " price: " + invet.getPrices()[i] + " stock: " + invet.getStocks().get(invet.getName_products().get(i));
             // show the product details in a message dialog and return to the main menu
             JOptionPane.showMessageDialog(null, output_print);
         } else {
@@ -217,4 +236,5 @@ public class Main {
         }
         return;
     }
+
 }

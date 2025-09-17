@@ -19,11 +19,13 @@ public class Inputs {
     public static String requestString(String prompt, String invalidInputMessage, boolean allowEmpty) {
         while (true) {
             String inputString = JOptionPane.showInputDialog(null, prompt);
-            String trimmedInput = inputString == null ? "" : inputString.trim();
+            System.out.println(inputString);
+            if (inputString == null) {
+                return inputString;}
             if (allowEmpty)
-                return trimmedInput;
-            if (!trimmedInput.isEmpty())
-                return trimmedInput.toLowerCase().trim();
+                return inputString;
+            if (!inputString.isEmpty())
+                return inputString.toLowerCase().trim();
 
             JOptionPane.showMessageDialog(null, invalidInputMessage, DEFAULT_INVALID_INPUT_PANE_TITLE,
                     JOptionPane.WARNING_MESSAGE);
@@ -31,9 +33,12 @@ public class Inputs {
     }
 
     // Integer
-    public static int requestInteger(String prompt, String invalidInputMessage, boolean allowEmpty, int defaultValue) {
+    public static Integer requestInteger(String prompt, String invalidInputMessage, boolean allowEmpty, int defaultValue) {
         while (true) {
             String inputInteger = requestString(prompt, allowEmpty);
+            if (inputInteger == null) {
+                return null;
+            }
             if (allowEmpty && (inputInteger == null || inputInteger.isEmpty())) {
                 return defaultValue; // Devuelve el valor por defecto si se permite vacío
             }
@@ -50,15 +55,15 @@ public class Inputs {
         }
     }
 
-    public static int requestInteger(String prompt, String invalidInputMessage, int defaultValue) {
+    public static Integer requestInteger(String prompt, String invalidInputMessage, int defaultValue) {
         return requestInteger(prompt, invalidInputMessage, false, defaultValue);
     }
 
-    public static int requestInteger(String prompt, int defaultValue) {
+    public static Integer requestInteger(String prompt, int defaultValue) {
         return requestInteger(prompt, "The input is not a valid integer. Please try again.", false, defaultValue);
     }
 
-    public static int requestInteger(String prompt) {
+    public static Integer requestInteger(String prompt) {
         return requestInteger(prompt, "The input is not a valid integer. Please try again.", false, 0);
     }
 
@@ -78,6 +83,8 @@ public class Inputs {
     public static Optional<Double> requestDouble(String prompt, String invalidInputMessage, boolean allowEmpty) {
         while (true) {
             String inputDouble = requestString(prompt, allowEmpty);
+            if (inputDouble == null)
+                return Optional.empty();
             if (allowEmpty && inputDouble.isEmpty())
                 return Optional.empty();
 

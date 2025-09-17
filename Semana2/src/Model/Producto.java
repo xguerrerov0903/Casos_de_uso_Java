@@ -2,7 +2,7 @@ package Model;
 
 import javax.swing.*;
 
-public class Producto {
+public abstract class Producto {
     private String name;
     private double price;
 
@@ -41,9 +41,7 @@ public class Producto {
                 '}';
     }
 
-    public String getDescription() {
-        return "This is a product named " + name + " with a price of " + price ;
-    }
+    public abstract String getDescription();
 }
 
 

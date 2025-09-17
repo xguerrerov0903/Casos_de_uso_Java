@@ -7,6 +7,7 @@ public class Invent {
     private ArrayList<String> name_products = new ArrayList<>();
     private double[] prices = new double[0];
     private HashMap<String, Integer> stocks = new HashMap<>();
+    private ArrayList<String> ticket = new ArrayList<>();
     private double total = 0;
 
     public ArrayList<String> getName_products() {
@@ -30,5 +31,9 @@ public class Invent {
 
     public void addTotal (double price) {
         this.total += price;
+    }
+
+    public ArrayList<String> getTicket() {
+        return ticket;
     }
 }
