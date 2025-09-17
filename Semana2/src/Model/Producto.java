@@ -26,6 +26,8 @@ public abstract class Producto {
         return price;
     }
 
+
+    // Set the price of the product
     public void setPrice(double price) {
         if (price < 0) {
             throw new IllegalArgumentException("The price cannot be negative");
