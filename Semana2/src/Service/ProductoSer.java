@@ -1,6 +1,7 @@
 package Service;
 
 // import the models
+import Interface.IProducto_Invent;
 import Model.Invent;
 import Model.Producto;
 import Model.Food;
@@ -9,11 +10,12 @@ import Model.Electrical;
 import java.util.ArrayList;
 
 
-public class ProductoSer
+public class ProductoSer implements IProducto_Invent
 {
 
     // Method to add a product to the inventory
-    public static Producto addProduct(Invent invet, String name, double price, int stock, int cat)
+    @Override
+    public Producto addProduct(Invent invet, String name, double price, int stock, int cat)
     {
         Producto producto;
         // add the product to the inventory based on the category
@@ -41,9 +43,11 @@ public class ProductoSer
         return producto;
     }
 
-    public static String getProducts(Invent invet, ArrayList<Producto> products)
+    @Override
+    public  String getProducts( Invent invet, ArrayList<Producto> products)
     {
         // return a string with the products in the inventory
+
         StringBuilder out_products = new StringBuilder();
         for (Producto product: products ) {
             String name = product.getName();
