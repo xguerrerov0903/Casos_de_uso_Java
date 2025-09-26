@@ -10,12 +10,12 @@ import Model.Electrical;
 import java.util.ArrayList;
 
 
-public class ProductoSer implements IProducto_Invent
+public class ProductoSer
 {
 
     // Method to add a product to the inventory
-    @Override
-    public Producto addProduct(Invent invet, String name, double price, int stock, int cat)
+
+    public static Producto addProduct(Invent invet, String name, double price, int stock, int cat)
     {
         Producto producto;
         // add the product to the inventory based on the category
@@ -43,8 +43,8 @@ public class ProductoSer implements IProducto_Invent
         return producto;
     }
 
-    @Override
-    public  String getProducts( Invent invet, ArrayList<Producto> products)
+
+    public static String getProducts( Invent invet, ArrayList<Producto> products)
     {
         // return a string with the products in the inventory
 
