@@ -157,7 +157,7 @@ public class ProductModel implements  CRUD {
         Connection objConnection = ConfigDB.openConnection();
 
         try {
-            String sql = "SELECT * FROM coders WHERE id_coder = ?";
+            String sql = "SELECT * FROM products WHERE id_coder = ?";
             PreparedStatement objPrepare = objConnection.prepareStatement(sql);
             objPrepare.setInt(1, id);
             ResultSet objResult = objPrepare.executeQuery();
@@ -216,7 +216,7 @@ public class ProductModel implements  CRUD {
         Connection objConnection = ConfigDB.openConnection();
 
         try {
-            String sql = "SELECT * FROM coders WHERE name = ?";
+            String sql = "SELECT * FROM products WHERE name = ?";
             PreparedStatement objPrepare = objConnection.prepareStatement(sql);
             objPrepare.setString(1, nameSearch);
             ResultSet objResult = objPrepare.executeQuery();

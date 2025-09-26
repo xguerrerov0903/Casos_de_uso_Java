@@ -169,4 +169,21 @@ public class ProductControler {
 
         }
     }
+
+    public static void findByName() {
+        ProductModel productModel = new ProductModel();
+        do {
+            String name = Inputs.requestString("Give me the name to search");
+            if (name == null) {
+                return;
+            }
+            Product objProduct = productModel.findByName(name);
+            if (objProduct == null) {
+                JOptionPane.showMessageDialog(null, "Product not found");
+            } else {
+                JOptionPane.showMessageDialog(null, objProduct.toString());
+            }
+        } while (true);
+
+    }
 }
